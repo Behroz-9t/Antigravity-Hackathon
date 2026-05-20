@@ -1,0 +1,361 @@
+import React, { useState, useRef, useEffect } from 'react';
+import {
+    View, Text, StyleSheet, SafeAreaView, TouchableOpacity,
+    Animated, Dimensions, Platform
+} from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useBookings } from '../BookingContext';
+import { T, GRADIENTS, SHADOWS } from '../theme';
+
+const { width } = Dimensions.get('window');
+
+const SLIDES = [
+    {
+        emoji: '🛸',
+        title: 'Welcome to AntiGravity',
+        subtitle: 'The smart, agentic home services marketplace designed to make your life effortless.',
+        agenda: '⚡ On-demand local pros at your doorstep\n🛡️ Safe, vetted, and top-rated providers\n🇵🇰 Designed for Pakistan, multilingual support'
+    },
+    {
+        emoji: '🤖',
+        title: 'AI Agent Orchestrator',
+        subtitle: 'No complex menus. Simply describe your problem in English, Roman Urdu, or Urdu.',
+        agenda: '🔍 Natural language service interpretation\n📊 Automatic provider ranking and distance score\n🤝 Transparent service agreements and fixed estimates'
+    },
+    {
+        emoji: '⏰',
+        title: 'Seamless Service Tracking',
+        subtitle: 'Never guess provider arrival times. Real-time updates right on your screen.',
+        agenda: '📍 Precise GPS map tracking & routing\n🔔 Auto notifications & 2-hr reminder alarms\n📭 Completely automated transaction receipts'
+    }
+];
+
+export default function OnboardingScreen() {
+    const { completeOnboarding } = useBookings();
+    const [index, setIndex] = useState(0);
+
+    const fadeAnim = useRef(new Animated.Value(1)).current;
+    const slideAnim = useRef(new Animated.Value(0)).current;
+    const emojiScale = useRef(new Animated.Value(1)).current;
+    const contentOpacity = useRef(new Animated.Value(1)).current;
+    const exitAnim = useRef(new Animated.Value(1)).current;
+
+    const animateTransition = (direction) => {
+        Animated.parallel([
+            Animated.timing(fadeAnim, {
+                toValue: 0,
+                duration: 250,
+                useNativeDriver: true,
+            }),
+            Animated.timing(slideAnim, {
+                toValue: direction > 0 ? -30 : 30,
+                duration: 250,
+                useNativeDriver: true,
+            }),
+        ]).start(() => {
+            fadeAnim.setValue(1);
+            slideAnim.setValue(direction > 0 ? 30 : -30);
+            setIndex(prev => prev + direction);
+
+            Animated.parallel([
+                Animated.timing(fadeAnim, {
+                    toValue: 1,
+                    duration: 300,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(slideAnim, {
+                    toValue: 0,
+                    duration: 350,
+                    useNativeDriver: true,
+                }),
+            ]).start();
+        });
+    };
+
+    const handleNext = () => {
+        if (index < SLIDES.length - 1) {
+            animateTransition(1);
+        } else {
+            animateExit(() => completeOnboarding());
+        }
+    };
+
+    const handleSkip = () => {
+        animateExit(() => completeOnboarding());
+    };
+
+    const animateExit = (callback) => {
+        Animated.parallel([
+            Animated.timing(exitAnim, {
+                toValue: 0,
+                duration: 400,
+                useNativeDriver: true,
+            }),
+        ]).start(() => {
+            callback();
+        });
+    };
+
+    useEffect(() => {
+        Animated.parallel([
+            Animated.timing(emojiScale, {
+                toValue: 1,
+                duration: 450,
+                useNativeDriver: true,
+            }),
+            Animated.timing(contentOpacity, {
+                toValue: 1,
+                duration: 500,
+                useNativeDriver: true,
+            }),
+        ]).start();
+    }, [index]);
+
+    const slide = SLIDES[index];
+
+    return (
+        <Animated.View style={{ flex: 1, opacity: exitAnim }}>
+            <SafeAreaView style={styles.safe}>
+            <View style={styles.header}>
+                <TouchableOpacity onPress={handleSkip}>
+                    <Text style={styles.skipText}>Skip</Text>
+                </TouchableOpacity>
+            </View>
+
+            <Animated.View
+                style={[
+                    styles.content,
+                    {
+                        opacity: fadeAnim,
+                        transform: [
+                            { translateX: slideAnim },
+                        ],
+                    },
+                ]}
+            >
+                <Animated.View
+                    style={[
+                        styles.iconContainer,
+                        {
+                            opacity: contentOpacity,
+                            transform: [
+                                {
+                                    scale: emojiScale.interpolate({
+                                        inputRange: [0, 1],
+                                        outputRange: [0.7, 1],
+                                    }),
+                                },
+                            ],
+                        },
+                    ]}
+                >
+                    <Text style={styles.emoji}>{slide.emoji}</Text>
+                </Animated.View>
+
+                <Animated.Text
+                    style={[
+                        styles.title,
+                        {
+                            opacity: contentOpacity,
+                            transform: [
+                                {
+                                    translateY: contentOpacity.interpolate({
+                                        inputRange: [0, 1],
+                                        outputRange: [12, 0],
+                                    }),
+                                },
+                            ],
+                        },
+                    ]}
+                >
+                    {slide.title}
+                </Animated.Text>
+
+                <Animated.Text
+                    style={[
+                        styles.subtitle,
+                        {
+                            opacity: contentOpacity,
+                            transform: [
+                                {
+                                    translateY: contentOpacity.interpolate({
+                                        inputRange: [0, 1],
+                                        outputRange: [12, 0],
+                                    }),
+                                },
+                            ],
+                        },
+                    ]}
+                >
+                    {slide.subtitle}
+                </Animated.Text>
+
+                <Animated.View
+                    style={[
+                        styles.agendaCard,
+                        {
+                            opacity: contentOpacity,
+                            transform: [
+                                {
+                                    translateY: contentOpacity.interpolate({
+                                        inputRange: [0, 1],
+                                        outputRange: [16, 0],
+                                    }),
+                                },
+                            ],
+                        },
+                    ]}
+                >
+                    <Text style={styles.agendaTitle}>WHAT WE OFFER</Text>
+                    <Text style={styles.agendaText}>{slide.agenda}</Text>
+                </Animated.View>
+            </Animated.View>
+
+            <View style={styles.footer}>
+                {/* Pagination Dots */}
+                <View style={styles.dotsContainer}>
+                    {SLIDES.map((_, i) => (
+                        <Animated.View
+                            key={i}
+                            style={[
+                                styles.dot,
+                                i === index && styles.activeDot,
+                                i === index && {
+                                    width: Animated.divide(slideAnim, 10).interpolate({
+                                        inputRange: [-3, 0, 3],
+                                        outputRange: [20, 20, 20],
+                                    }),
+                                },
+                            ]}
+                        />
+                    ))}
+                </View>
+
+                {/* Primary CTA */}
+                <TouchableOpacity style={styles.nextBtn} onPress={handleNext}>
+                    <LinearGradient
+                        colors={['#00E5FF', '#7C3AED']}
+                        style={styles.nextGrad}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 0 }}
+                    >
+                        <Text style={styles.nextText}>
+                            {index === SLIDES.length - 1 ? 'Get Started 🚀' : 'Continue'}
+                        </Text>
+                    </LinearGradient>
+                </TouchableOpacity>
+            </View>
+            </SafeAreaView>
+        </Animated.View>
+    );
+}
+
+const styles = StyleSheet.create({
+    safe: {
+        flex: 1,
+        backgroundColor: '#0D0F14',
+    },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        paddingHorizontal: 24,
+        paddingTop: 16,
+    },
+    skipText: {
+        color: '#64748B',
+        fontSize: 14,
+        fontWeight: '600',
+    },
+    content: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 32,
+    },
+    iconContainer: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        backgroundColor: 'rgba(0, 229, 255, 0.1)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 32,
+        borderWidth: 1,
+        borderColor: 'rgba(0, 229, 255, 0.2)',
+    },
+    emoji: {
+        fontSize: 48,
+    },
+    title: {
+        color: '#F1F5F9',
+        fontSize: 26,
+        fontWeight: '800',
+        textAlign: 'center',
+        letterSpacing: -0.5,
+        marginBottom: 12,
+    },
+    subtitle: {
+        color: '#94A3B8',
+        fontSize: 14,
+        textAlign: 'center',
+        lineHeight: 22,
+        marginBottom: 32,
+    },
+    agendaCard: {
+        backgroundColor: '#161A24',
+        borderRadius: 20,
+        padding: 20,
+        width: '100%',
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.06)',
+        ...SHADOWS.card,
+    },
+    agendaTitle: {
+        color: '#00E5FF',
+        fontSize: 11,
+        fontWeight: '700',
+        letterSpacing: 1.5,
+        marginBottom: 12,
+    },
+    agendaText: {
+        color: '#F1F5F9',
+        fontSize: 14,
+        lineHeight: 24,
+        fontWeight: '500',
+    },
+    footer: {
+        paddingHorizontal: 24,
+        paddingBottom: 32,
+        alignItems: 'center',
+    },
+    dotsContainer: {
+        flexDirection: 'row',
+        gap: 8,
+        marginBottom: 24,
+    },
+    dot: {
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    },
+    activeDot: {
+        width: 20,
+        backgroundColor: '#00E5FF',
+    },
+    nextBtn: {
+        width: '100%',
+        borderRadius: 16,
+        overflow: 'hidden',
+        ...SHADOWS.btn,
+    },
+    nextGrad: {
+        paddingVertical: 18,
+        alignItems: 'center',
+    },
+    nextText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '800',
+    },
+});
