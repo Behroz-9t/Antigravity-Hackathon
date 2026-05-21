@@ -7,17 +7,17 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "prebuildCommand": "npx expo prebuild --clean"
+      "prebuildCommand": "npx expo prebuild --clean && node patch-gradle-after-prebuild.js"
     },
     "preview": {
       "distribution": "internal",
-      "prebuildCommand": "npx expo prebuild --clean",
+      "prebuildCommand": "npx expo prebuild --clean && node patch-gradle-after-prebuild.js",
       "android": {
         "buildType": "apk"
       }
     },
     "production": {
-      "prebuildCommand": "npx expo prebuild --clean"
+      "prebuildCommand": "npx expo prebuild --clean && node patch-gradle-after-prebuild.js"
     }
   },
   "submit": {
