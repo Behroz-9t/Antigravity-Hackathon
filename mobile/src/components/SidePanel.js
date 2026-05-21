@@ -3,7 +3,7 @@ import {
     View, Text, StyleSheet, Animated, TouchableOpacity, ScrollView,
     SafeAreaView, useWindowDimensions,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { navigationRef } from '../../App';
 import { useSidePanel } from './SidePanelContext';
 import { useBookings } from '../BookingContext';
 import { T, GRADIENTS, SHADOWS } from '../theme';
@@ -20,7 +20,6 @@ export default function SidePanel() {
     const { isOpen, activeTab, closePanel, switchTab } = useSidePanel();
     const { user, bookings, logout } = useBookings();
     const { width: screenWidth } = useWindowDimensions();
-    const navigation = useNavigation();
     // Use a 0→1 progress value — safer with useNativeDriver
     const progress = useRef(new Animated.Value(0)).current;
 
@@ -125,13 +124,15 @@ export default function SidePanel() {
                                 activeOpacity={0.8}
                                 onPress={() => {
                                     closePanel();
-                                    navigation.navigate('ProviderChat', {
-                                        bookingId:    booking.id,
-                                        bookingData:  booking.rawData?.booking,
-                                        intentData:   booking.rawData?.intent,
-                                        providerData: booking.provider,
-                                        bookingMeta:  booking.bookingMeta,
-                                    });
+                                    if (navigationRef.isReady()) {
+                                        navigationRef.navigate('ProviderChat', {
+                                            bookingId:    booking.id,
+                                            bookingData:  booking.rawData?.booking,
+                                            intentData:   booking.rawData?.intent,
+                                            providerData: booking.provider,
+                                            bookingMeta:  booking.bookingMeta,
+                                        });
+                                    }
                                 }}
                             >
                                 <MessageCircle size={13} color="#38BDF8" strokeWidth={2} />
@@ -165,13 +166,15 @@ export default function SidePanel() {
                                 activeOpacity={0.8}
                                 onPress={() => {
                                     closePanel();
-                                    navigation.navigate('ProviderChat', {
-                                        bookingId:    booking.id,
-                                        bookingData:  booking.rawData?.booking,
-                                        intentData:   booking.rawData?.intent,
-                                        providerData: booking.provider,
-                                        bookingMeta:  booking.bookingMeta,
-                                    });
+                                    if (navigationRef.isReady()) {
+                                        navigationRef.navigate('ProviderChat', {
+                                            bookingId:    booking.id,
+                                            bookingData:  booking.rawData?.booking,
+                                            intentData:   booking.rawData?.intent,
+                                            providerData: booking.provider,
+                                            bookingMeta:  booking.bookingMeta,
+                                        });
+                                    }
                                 }}
                             >
                                 <MessageCircle size={13} color="#94A3B8" strokeWidth={2} />

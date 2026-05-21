@@ -1,7 +1,12 @@
 import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, createNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+// ── Global navigation ref ─────────────────────────────────────────────────────
+// Allows non-screen components (e.g. SidePanel) to navigate anywhere in the
+// full nav tree regardless of where they sit in the component hierarchy.
+export const navigationRef = createNavigationContainerRef();
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ErrorBoundary from './src/ErrorBoundary';
@@ -52,7 +57,7 @@ function AppNavigator() {
     }
 
     return (
-        <NavigationContainer>
+        <NavigationContainer ref={navigationRef}>
             <StatusBar style="light" />
             <Stack.Navigator
                 screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#0A0B0D' } }}
