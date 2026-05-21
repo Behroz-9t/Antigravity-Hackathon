@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
     View, Text, StyleSheet, Animated, TouchableOpacity, ScrollView,
-    SafeAreaView, Platform, useWindowDimensions, Dimensions,
+    SafeAreaView, useWindowDimensions,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { useSidePanel } from './SidePanelContext';
 import { useBookings } from '../BookingContext';
 import { T, GRADIENTS, SHADOWS } from '../theme';
 import { downloadBookingLogs } from '../utils/logExporter';
-import { 
-    Calendar, Bot, LogOut, Inbox, Download, X, Star, ChevronDown, ChevronUp 
+import {
+    Calendar, Bot, LogOut, Inbox, Download, X, Star,
+    ChevronDown, ChevronUp, MessageCircle,
 } from 'lucide-react-native';
 
 const PANEL_WIDTH = 280;
@@ -18,6 +20,7 @@ export default function SidePanel() {
     const { isOpen, activeTab, closePanel, switchTab } = useSidePanel();
     const { user, bookings, logout } = useBookings();
     const { width: screenWidth } = useWindowDimensions();
+    const navigation = useNavigation();
     // Use a 0→1 progress value — safer with useNativeDriver
     const progress = useRef(new Animated.Value(0)).current;
 
@@ -106,13 +109,34 @@ export default function SidePanel() {
                     {activeBookings.map(booking => (
                         <View key={booking.id} style={styles.bookingCard}>
                             <View style={styles.bookingHeader}>
-                                <Text style={styles.bookingService}>{booking.service}</Text>
+                                <Text style={styles.bookingService} numberOfLines={1}>{booking.service}</Text>
                                 <Text style={[styles.bookingStatus, { color: '#00E5FF', fontWeight: '800' }]}>
                                     ● {booking.status}
                                 </Text>
                             </View>
-                            <Text style={styles.bookingProvider}>{booking.provider?.provider_name || booking.provider || 'Provider'}</Text>
+                            <Text style={styles.bookingProvider}>
+                                {booking.provider?.provider_name || booking.provider || 'Provider'}
+                            </Text>
                             <Text style={styles.bookingDate}>{booking.date}</Text>
+
+                            {/* Talk to AI Agent button */}
+                            <TouchableOpacity
+                                style={styles.chatBtn}
+                                activeOpacity={0.8}
+                                onPress={() => {
+                                    closePanel();
+                                    navigation.navigate('ProviderChat', {
+                                        bookingId:    booking.id,
+                                        bookingData:  booking.rawData?.booking,
+                                        intentData:   booking.rawData?.intent,
+                                        providerData: booking.provider,
+                                        bookingMeta:  booking.bookingMeta,
+                                    });
+                                }}
+                            >
+                                <MessageCircle size={13} color="#38BDF8" strokeWidth={2} />
+                                <Text style={styles.chatBtnText}>Talk to AI Agent</Text>
+                            </TouchableOpacity>
                         </View>
                     ))}
                 </>
@@ -124,14 +148,35 @@ export default function SidePanel() {
                     {completedBookings.map(booking => (
                         <View key={booking.id} style={[styles.bookingCard, styles.bookingCardCompleted]}>
                             <View style={styles.bookingHeader}>
-                                <Text style={styles.bookingService}>{booking.service}</Text>
+                                <Text style={styles.bookingService} numberOfLines={1}>{booking.service}</Text>
                                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
                                     <Star size={11} color="#D4AF37" fill="#D4AF37" />
                                     <Text style={styles.rating}>{booking.rating || 'N/A'}</Text>
                                 </View>
                             </View>
-                            <Text style={styles.bookingProvider}>{booking.provider?.provider_name || booking.provider || 'Provider'}</Text>
+                            <Text style={styles.bookingProvider}>
+                                {booking.provider?.provider_name || booking.provider || 'Provider'}
+                            </Text>
                             <Text style={styles.bookingDate}>{booking.date}</Text>
+
+                            {/* Talk to AI Agent button — available for all bookings */}
+                            <TouchableOpacity
+                                style={[styles.chatBtn, styles.chatBtnCompleted]}
+                                activeOpacity={0.8}
+                                onPress={() => {
+                                    closePanel();
+                                    navigation.navigate('ProviderChat', {
+                                        bookingId:    booking.id,
+                                        bookingData:  booking.rawData?.booking,
+                                        intentData:   booking.rawData?.intent,
+                                        providerData: booking.provider,
+                                        bookingMeta:  booking.bookingMeta,
+                                    });
+                                }}
+                            >
+                                <MessageCircle size={13} color="#94A3B8" strokeWidth={2} />
+                                <Text style={[styles.chatBtnText, { color: '#94A3B8' }]}>Talk to AI Agent</Text>
+                            </TouchableOpacity>
                         </View>
                     ))}
                 </>
@@ -530,6 +575,28 @@ const styles = StyleSheet.create({
     bookingDate: {
         fontSize: 10,
         color: 'rgba(255,255,255,0.4)',
+        marginBottom: 8,
+    },
+    chatBtn: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
+        backgroundColor: 'rgba(56,189,248,0.08)',
+        borderWidth: 1,
+        borderColor: 'rgba(56,189,248,0.2)',
+        borderRadius: 8,
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        alignSelf: 'flex-start',
+    },
+    chatBtnCompleted: {
+        backgroundColor: 'rgba(148,163,184,0.06)',
+        borderColor: 'rgba(148,163,184,0.15)',
+    },
+    chatBtnText: {
+        color: '#38BDF8',
+        fontSize: 11,
+        fontWeight: '700',
     },
     rating: {
         fontSize: 11,

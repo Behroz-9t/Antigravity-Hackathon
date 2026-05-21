@@ -240,13 +240,20 @@ export default function ProviderChatScreen({ route, navigation }) {
                 setBackend(usedBackend);
                 setIsReady(true);
             } catch (e) {
-                // Hard fallback message
-                const fallback =
-                    `Assalamu Alaikum! Main ${providerName} bol raha hoon. ` +
-                    `Aap ka ${service} request mil gaya hai — main ${eta} mein pohunch jaunga. ` +
-                    `Koi sawal ho toh zaroor poochein, haan ji!`;
+                // Hard fallback — show a friendly message + clear "no key" warning
+                const noKeys = !GROQ_API_KEY && !GEMINI_API_KEY;
+                const fallback = noKeys
+                    ? `Hello ji! I am ${providerName}, your ${service} specialist. ` +
+                      `I will arrive in ${eta}. Feel free to ask me anything!`
+                    : `Assalamu Alaikum! Main ${providerName} bol raha hoon. ` +
+                      `Aap ka ${service} request mil gaya hai — main ${eta} mein pohunch jaunga. ` +
+                      `Koi sawal ho toh zaroor poochein, haan ji!`;
                 appendMsg('model', fallback);
-                setErrorMsg('AI service unavailable — check your EAS secrets.');
+                setErrorMsg(
+                    noKeys
+                        ? '⚠️ No API keys found. For local dev: create mobile/.env with your EXPO_PUBLIC_GROQ_API_KEY and EXPO_PUBLIC_GEMINI_API_KEY, then restart Metro.'
+                        : 'AI service unavailable. Check your API keys and internet connection.'
+                );
                 setBackend(AI_BACKEND.NONE);
                 setIsReady(true);
             } finally {
