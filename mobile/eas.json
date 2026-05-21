@@ -6,19 +6,15 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal",
-      "prebuildCommand": "node run-prebuild.js"
+      "distribution": "internal"
     },
     "preview": {
       "distribution": "internal",
-      "prebuildCommand": "node run-prebuild.js",
       "android": {
         "buildType": "apk"
       }
     },
-    "production": {
-      "prebuildCommand": "node run-prebuild.js"
-    }
+    "production": {}
   },
   "submit": {
     "production": {}
