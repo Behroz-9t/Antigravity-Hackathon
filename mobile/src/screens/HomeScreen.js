@@ -6,31 +6,38 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { orchestrateRequest, getUserLocation } from '../api';
 import { useBookings } from '../BookingContext';
+import { 
+    Wind, Droplet, Zap, Sparkles, Hammer, Bug, MapPin, Users, Phone,
+    Wrench, Mic, Bot, Car, Clock, History, LogOut, User, Info, X
+} from 'lucide-react-native';
 
 const SUGGESTIONS = [
-    { icon: '❄️', label: 'AC Repair',    query: 'AC kharab hai theek karo' },
-    { icon: '🔧', label: 'Plumber',      query: 'mujhy plumber chahiye' },
-    { icon: '⚡', label: 'Electrician',  query: 'bijli ka masla hai electrician chahiye' },
-    { icon: '✨', label: 'Cleaning',     query: 'ghar ki safai karni hai' },
-    { icon: '🪑', label: 'Carpenter',   query: 'furniture theek karna hai' },
-    { icon: '🐛', label: 'Pest Control', query: 'keeray makoray ka spray chahiye' },
+    { Icon: Wind,     iconColor: '#38BDF8', label: 'AC Repair',    query: 'AC kharab hai theek karo' },
+    { Icon: Droplet,  iconColor: '#38BDF8', label: 'Plumber',      query: 'mujhy plumber chahiye' },
+    { Icon: Zap,      iconColor: '#D4AF37', label: 'Electrician',  query: 'bijli ka masla hai electrician chahiye' },
+    { Icon: Sparkles, iconColor: '#10B981', label: 'Cleaning',     query: 'ghar ki safai karni hai' },
+    { Icon: Hammer,   iconColor: '#F59E0B', label: 'Carpenter',    query: 'furniture theek karna hai' },
+    { Icon: Bug,      iconColor: '#EF4444', label: 'Pest Control', query: 'keeray makoray ka spray chahiye' },
 ];
 
 const C = {
-    bg: '#0A0A14', card: '#12122A', border: 'rgba(255,255,255,0.07)',
-    text: '#F1F5F9', sub: '#64748B', primary: '#00E5FF', purple: '#7C3AED',
+    bg: '#0A0B0D', card: 'rgba(18, 20, 23, 0.95)', border: 'rgba(255, 255, 255, 0.08)',
+    text: '#F8FAFC', sub: '#94A3B8', primary: '#38BDF8', gold: '#D4AF37',
 };
 
 function InputField({ label, icon, value, onChangeText, placeholder, keyboardType, multiline, maxLength }) {
     return (
         <View style={styles.fieldWrap}>
-            <Text style={styles.fieldLabel}>{icon}  {label}</Text>
+            <View style={styles.fieldLabelRow}>
+                {icon}
+                <Text style={styles.fieldLabel}>{label}</Text>
+            </View>
             <TextInput
                 style={[styles.fieldInput, multiline && { minHeight: 52 }]}
                 value={value}
                 onChangeText={onChangeText}
                 placeholder={placeholder}
-                placeholderTextColor="#3D4A5C"
+                placeholderTextColor="#475569"
                 keyboardType={keyboardType ?? 'default'}
                 multiline={multiline}
                 maxLength={maxLength}
@@ -189,26 +196,35 @@ export default function HomeScreen({ navigation }) {
 
                     {user ? (
                         <View style={styles.profileBar}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                                <Text style={styles.profileIcon}>👤</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                                <View style={styles.profileIconWrap}>
+                                    <User size={18} color="#38BDF8" />
+                                </View>
                                 <View>
                                     <Text style={styles.profileName}>{user.name}</Text>
                                     <Text style={styles.profilePhone}>{user.phone}</Text>
                                 </View>
                             </View>
                             <TouchableOpacity style={styles.logoutBtn} onPress={logout}>
-                                <Text style={styles.logoutText}>Sign Out 🚪</Text>
+                                <LogOut size={14} color="#EF4444" />
+                                <Text style={styles.logoutText}>Sign Out</Text>
                             </TouchableOpacity>
                         </View>
                     ) : null}
 
                     {/* Hero */}
-                    <LinearGradient colors={['#12082A','#0A0A14']} style={styles.hero}>
+                    <LinearGradient colors={['#1A1D22', '#0A0B0D']} style={styles.hero}>
                         <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }], alignItems: 'center' }}>
                             <View style={styles.logoBadge}>
-                                <Text style={styles.logoEmoji}>⚡</Text>
+                                <LinearGradient
+                                    colors={['rgba(56,189,248,0.18)', 'rgba(212,175,55,0.10)']}
+                                    style={styles.logoBadgeGrad}
+                                >
+                                    <Wrench size={32} color="#38BDF8" strokeWidth={1.8} />
+                                </LinearGradient>
+                                <View style={styles.logoBadgeGlow} />
                             </View>
-                            <Text style={styles.appName}>AntiGravity</Text>
+                            <Text style={styles.appName}>اہلِ فن</Text>
                             <Text style={styles.tagline}>AI-Powered Home Services · Pakistan</Text>
                         </Animated.View>
                     </LinearGradient>
@@ -222,10 +238,11 @@ export default function HomeScreen({ navigation }) {
                                 onPress={() => { setMode('self'); setErrorMsg(''); }}
                             >
                                 {mode === 'self'
-                                    ? <LinearGradient colors={['#00E5FF','#7C3AED']} style={styles.modeBtnGrad} start={{x:0,y:0}} end={{x:1,y:0}}>
-                                        <Text style={styles.modeBtnTextActive}>📍 For Myself</Text>
+                                    ? <LinearGradient colors={['#38BDF8','#0284C7']} style={styles.modeBtnGrad} start={{x:0,y:0}} end={{x:1,y:0}}>
+                                        <MapPin size={14} color="#fff" />
+                                        <Text style={styles.modeBtnTextActive}>For Myself</Text>
                                       </LinearGradient>
-                                    : <Text style={styles.modeBtnText}>📍 For Myself</Text>
+                                    : <View style={styles.modeBtnInner}><MapPin size={14} color={C.sub} /><Text style={styles.modeBtnText}>For Myself</Text></View>
                                 }
                             </TouchableOpacity>
                             <TouchableOpacity
@@ -233,10 +250,11 @@ export default function HomeScreen({ navigation }) {
                                 onPress={() => { setMode('others'); setErrorMsg(''); }}
                             >
                                 {mode === 'others'
-                                    ? <LinearGradient colors={['#00E5FF','#7C3AED']} style={styles.modeBtnGrad} start={{x:0,y:0}} end={{x:1,y:0}}>
-                                        <Text style={styles.modeBtnTextActive}>👥 Book for Others</Text>
+                                    ? <LinearGradient colors={['#38BDF8','#0284C7']} style={styles.modeBtnGrad} start={{x:0,y:0}} end={{x:1,y:0}}>
+                                        <Users size={14} color="#fff" />
+                                        <Text style={styles.modeBtnTextActive}>Book for Others</Text>
                                       </LinearGradient>
-                                    : <Text style={styles.modeBtnText}>👥 Book for Others</Text>
+                                    : <View style={styles.modeBtnInner}><Users size={14} color={C.sub} /><Text style={styles.modeBtnText}>Book for Others</Text></View>
                                 }
                             </TouchableOpacity>
                         </View>
@@ -251,7 +269,7 @@ export default function HomeScreen({ navigation }) {
 
                                         <InputField
                                             label="Describe your need"
-                                            icon="🔧"
+                                            icon={<Wrench size={15} color={C.sub} />}
                                             value={query}
                                             onChangeText={t => { setQuery(t); setErrorMsg(''); }}
                                             placeholder="e.g. AC kharab hai electrician chahiye…"
@@ -273,13 +291,16 @@ export default function HomeScreen({ navigation }) {
                                                 }}
                                                 disabled={isImmUnavailable}
                                             >
-                                                <Text style={[
-                                                    styles.timeOptionText,
-                                                    timeOption === 'immediate' && styles.timeOptionTextActive,
-                                                    isImmUnavailable && styles.timeOptionTextDisabled
-                                                ]}>
-                                                    ⚡ Immediate {isImmUnavailable ? '(Unavailable)' : ''}
-                                                </Text>
+                                                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                                                    <Zap size={14} color={timeOption === 'immediate' ? '#38BDF8' : C.sub} />
+                                                    <Text style={[
+                                                        styles.timeOptionText,
+                                                        timeOption === 'immediate' && styles.timeOptionTextActive,
+                                                        isImmUnavailable && styles.timeOptionTextDisabled
+                                                    ]}>
+                                                        Immediate {isImmUnavailable ? '(Unavailable)' : ''}
+                                                    </Text>
+                                                </View>
                                             </TouchableOpacity>
 
                                             <TouchableOpacity
@@ -288,9 +309,12 @@ export default function HomeScreen({ navigation }) {
                                                     setShowSlotsModal(true);
                                                 }}
                                             >
-                                                <Text style={[styles.timeOptionText, timeOption === 'later' && styles.timeOptionTextActive]}>
-                                                    📅 Book for Later
-                                                </Text>
+                                                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                                                    <Clock size={14} color={timeOption === 'later' ? '#38BDF8' : C.sub} />
+                                                    <Text style={[styles.timeOptionText, timeOption === 'later' && styles.timeOptionTextActive]}>
+                                                        Book for Later
+                                                    </Text>
+                                                </View>
                                             </TouchableOpacity>
                                         </View>
 
@@ -313,21 +337,22 @@ export default function HomeScreen({ navigation }) {
                                     <>
                                         <Text style={styles.cardHeading}>Book a service for someone else</Text>
                                         <View style={styles.infoBanner}>
+                                            <Info size={14} color="#A78BFA" style={{ marginRight: 8 }} />
                                             <Text style={styles.infoText}>
-                                                ℹ️ The service provider will go to the address you specify below. We will geocode this location to find local providers nearby.
+                                                The service provider will go to the address you specify below. We will geocode this location to find local providers nearby.
                                             </Text>
                                         </View>
 
                                         <InputField
                                             label="Recipient's Name"
-                                            icon="👤"
+                                            icon={<User size={15} color={C.sub} />}
                                             value={recipientName}
                                             onChangeText={setRecipientName}
                                             placeholder="e.g. Ahmad Ali"
                                         />
                                         <InputField
                                             label="Recipient's Contact Number"
-                                            icon="📞"
+                                            icon={<Phone size={15} color={C.sub} />}
                                             value={recipientPhone}
                                             onChangeText={setRecipientPhone}
                                             placeholder="e.g. 03129876543"
@@ -336,14 +361,14 @@ export default function HomeScreen({ navigation }) {
                                         />
                                         <InputField
                                             label="Recipient's Location / Address"
-                                            icon="📍"
+                                            icon={<MapPin size={15} color={C.sub} />}
                                             value={recipientAddress}
                                             onChangeText={t => { setRecipientAddress(t); setErrorMsg(''); }}
                                             placeholder="e.g. Malir Cantonment, Karachi"
                                         />
                                         <InputField
                                             label="Describe the service needed"
-                                            icon="🔧"
+                                            icon={<Wrench size={15} color={C.sub} />}
                                             value={query}
                                             onChangeText={t => { setQuery(t); setErrorMsg(''); }}
                                             placeholder="e.g. Plumber chahiye kitchen sink block hai…"
@@ -405,11 +430,11 @@ export default function HomeScreen({ navigation }) {
                                 ) : null}
 
                                 <TouchableOpacity onPress={() => handleSearch()} disabled={loading} style={styles.searchBtn}>
-                                    <LinearGradient colors={['#00E5FF','#7C3AED']} style={styles.searchBtnGrad} start={{x:0,y:0}} end={{x:1,y:0}}>
+                                    <LinearGradient colors={['#38BDF8','#0284C7']} style={styles.searchBtnGrad} start={{x:0,y:0}} end={{x:1,y:0}}>
                                         {loading
                                             ? <ActivityIndicator color="#fff" />
                                             : <Text style={styles.searchBtnText}>
-                                                {mode === 'others' ? 'Find Provider Near Them  🚀' : 'Find Service Provider  🚀'}
+                                                {mode === 'others' ? 'Find Provider Near Them  →' : 'Find Service Provider  →'}
                                               </Text>
                                         }
                                     </LinearGradient>
@@ -427,7 +452,7 @@ export default function HomeScreen({ navigation }) {
                                     onPress={() => { setQuery(s.query); handleSearch(s.query); }}
                                     disabled={loading}
                                 >
-                                    <Text style={styles.chipIcon}>{s.icon}</Text>
+                                    <s.Icon size={20} color={s.iconColor} />
                                     <Text style={styles.chipLabel}>{s.label}</Text>
                                 </TouchableOpacity>
                             ))}
@@ -436,13 +461,15 @@ export default function HomeScreen({ navigation }) {
                         {/* How it works */}
                         <Text style={styles.sectionTitle}>How It Works</Text>
                         {[
-                            { step:'1', icon:'🎙️', title:'Describe your need', desc:'Type in English, Urdu or Roman Urdu' },
-                            { step:'2', icon:'🤖', title:'AI finds providers', desc:'Ranked by distance & rating near the address' },
-                            { step:'3', icon:'🚗', title:'Track live arrival',  desc:'Watch provider en route on the map' },
+                            { step:'1', Icon: Mic,  iconColor: '#38BDF8', title:'Describe your need', desc:'Type in English, Urdu or Roman Urdu' },
+                            { step:'2', Icon: Bot,  iconColor: '#D4AF37', title:'AI finds providers', desc:'Ranked by distance & rating near the address' },
+                            { step:'3', Icon: Car,  iconColor: '#10B981', title:'Track live arrival',  desc:'Watch provider en route on the map' },
                         ].map(card => (
                             <View key={card.step} style={styles.howCard}>
                                 <View style={styles.howStep}><Text style={styles.howStepText}>{card.step}</Text></View>
-                                <Text style={styles.howIcon}>{card.icon}</Text>
+                                <View style={styles.howIconWrap}>
+                                    <card.Icon size={24} color={card.iconColor} strokeWidth={1.8} />
+                                </View>
                                 <View style={{ flex: 1 }}>
                                     <Text style={styles.howTitle}>{card.title}</Text>
                                     <Text style={styles.howDesc}>{card.desc}</Text>
@@ -451,7 +478,8 @@ export default function HomeScreen({ navigation }) {
                         ))}
 
                         <TouchableOpacity style={styles.historyBtn} onPress={() => navigation.navigate('History')}>
-                            <Text style={styles.historyBtnText}>📋  View My Bookings</Text>
+                            <History size={16} color={C.sub} />
+                            <Text style={styles.historyBtnText}>View My Bookings</Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
@@ -533,19 +561,21 @@ const styles = StyleSheet.create({
     scroll: { paddingBottom: 48 },
 
     hero: { paddingTop: Platform.OS === 'android' ? 50 : 60, paddingBottom: 32, alignItems: 'center' },
-    logoBadge: { width: 72, height: 72, borderRadius: 24, backgroundColor: 'rgba(0,229,255,0.12)', borderWidth: 2, borderColor: 'rgba(0,229,255,0.4)', justifyContent: 'center', alignItems: 'center', marginBottom: 12 },
-    logoEmoji: { fontSize: 34 },
-    appName: { color: C.text, fontSize: 30, fontWeight: '900', letterSpacing: 1 },
-    tagline: { color: C.primary, fontSize: 13, fontWeight: '600', marginTop: 4 },
+    logoBadge: { width: 80, height: 80, borderRadius: 28, justifyContent: 'center', alignItems: 'center', marginBottom: 16, position: 'relative' },
+    logoBadgeGrad: { width: 80, height: 80, borderRadius: 28, borderWidth: 1, borderColor: 'rgba(56,189,248,0.25)', justifyContent: 'center', alignItems: 'center' },
+    logoBadgeGlow: { position: 'absolute', width: 90, height: 90, borderRadius: 32, backgroundColor: 'rgba(56, 189, 248, 0.06)', zIndex: -1 },
+    appName: { color: C.text, fontSize: 32, fontWeight: '900', letterSpacing: 1, marginTop: 4 },
+    tagline: { color: C.primary, fontSize: 13, fontWeight: '600', marginTop: 6 },
 
     content: { padding: 16 },
 
     // Mode toggle
-    modeToggle: { flexDirection: 'row', backgroundColor: C.card, borderRadius: 18, padding: 5, marginBottom: 16, borderWidth: 1, borderColor: C.border, gap: 4 },
+    modeToggle: { flexDirection: 'row', backgroundColor: 'rgba(18,20,23,0.95)', borderRadius: 18, padding: 5, marginBottom: 16, borderWidth: 1, borderColor: C.border, gap: 4 },
     modeBtn: { flex: 1, borderRadius: 14, overflow: 'hidden' },
     modeBtnActive: {},
-    modeBtnGrad: { paddingVertical: 12, alignItems: 'center' },
-    modeBtnText: { color: C.sub, fontSize: 13, fontWeight: '600', textAlign: 'center', paddingVertical: 12 },
+    modeBtnGrad: { paddingVertical: 12, alignItems: 'center', flexDirection: 'row', gap: 6, justifyContent: 'center' },
+    modeBtnInner: { flexDirection: 'row', alignItems: 'center', gap: 6, justifyContent: 'center', paddingVertical: 12 },
+    modeBtnText: { color: C.sub, fontSize: 13, fontWeight: '600' },
     modeBtnTextActive: { color: '#fff', fontSize: 13, fontWeight: '700' },
 
     // Search card
@@ -553,12 +583,13 @@ const styles = StyleSheet.create({
     cardHeading: { color: C.text, fontSize: 16, fontWeight: '700', marginBottom: 16 },
 
     fieldWrap: { marginBottom: 14 },
-    fieldLabel: { color: C.sub, fontSize: 12, fontWeight: '600', marginBottom: 6 },
-    fieldInput: { backgroundColor: '#0D0D20', borderRadius: 14, paddingHorizontal: 14, paddingVertical: 12, borderWidth: 1, borderColor: 'rgba(0,229,255,0.18)', color: C.text, fontSize: 14 },
+    fieldLabelRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 8 },
+    fieldLabel: { color: C.sub, fontSize: 12, fontWeight: '600' },
+    fieldInput: { backgroundColor: 'rgba(255,255,255,0.04)', borderRadius: 14, paddingHorizontal: 14, paddingVertical: 12, borderWidth: 1, borderColor: 'rgba(56,189,248,0.15)', color: C.text, fontSize: 14 },
 
-    infoBanner: { backgroundColor: 'rgba(124,58,237,0.08)', borderRadius: 12, padding: 12, marginBottom: 14, borderWidth: 1, borderColor: 'rgba(124,58,237,0.25)' },
-    infoText: { color: '#A78BFA', fontSize: 12, lineHeight: 18 },
-    locBanner: { backgroundColor: 'rgba(0,229,255,0.06)', borderRadius: 10, padding: 10, marginBottom: 10, borderWidth: 1, borderColor: 'rgba(0,229,255,0.2)' },
+    infoBanner: { backgroundColor: 'rgba(124,58,237,0.06)', borderRadius: 12, padding: 12, marginBottom: 14, borderWidth: 1, borderColor: 'rgba(124,58,237,0.20)', flexDirection: 'row', alignItems: 'flex-start' },
+    infoText: { color: '#A78BFA', fontSize: 12, lineHeight: 18, flex: 1 },
+    locBanner: { backgroundColor: 'rgba(56,189,248,0.06)', borderRadius: 10, padding: 10, marginBottom: 10, borderWidth: 1, borderColor: 'rgba(56,189,248,0.20)' },
     locText: { color: C.primary, fontSize: 12 },
     errBanner: { backgroundColor: 'rgba(239,68,68,0.08)', borderRadius: 10, padding: 10, marginBottom: 10, borderWidth: 1, borderColor: 'rgba(239,68,68,0.3)' },
     errText: { color: '#EF4444', fontSize: 13 },
@@ -574,13 +605,13 @@ const styles = StyleSheet.create({
     chipLabel: { color: C.text, fontSize: 13, fontWeight: '600' },
 
     howCard: { backgroundColor: C.card, borderRadius: 18, padding: 16, marginBottom: 10, flexDirection: 'row', alignItems: 'center', gap: 14, borderWidth: 1, borderColor: C.border },
-    howStep: { width: 32, height: 32, borderRadius: 16, backgroundColor: 'rgba(0,229,255,0.12)', justifyContent: 'center', alignItems: 'center' },
+    howStep: { width: 32, height: 32, borderRadius: 16, backgroundColor: 'rgba(56,189,248,0.10)', justifyContent: 'center', alignItems: 'center' },
     howStepText: { color: C.primary, fontWeight: '800', fontSize: 14 },
-    howIcon: { fontSize: 26 },
+    howIconWrap: { width: 40, height: 40, borderRadius: 12, backgroundColor: 'rgba(255,255,255,0.04)', borderWidth: 1, borderColor: C.border, justifyContent: 'center', alignItems: 'center' },
     howTitle: { color: C.text, fontSize: 15, fontWeight: '700' },
     howDesc: { color: C.sub, fontSize: 12, marginTop: 2 },
 
-    historyBtn: { backgroundColor: C.card, borderRadius: 16, padding: 16, alignItems: 'center', marginTop: 16, borderWidth: 1, borderColor: C.border },
+    historyBtn: { backgroundColor: C.card, borderRadius: 16, padding: 16, alignItems: 'center', marginTop: 16, borderWidth: 1, borderColor: C.border, flexDirection: 'row', justifyContent: 'center', gap: 10 },
     historyBtnText: { color: C.sub, fontSize: 15, fontWeight: '600' },
 
     // Time slots selection styles
@@ -591,7 +622,7 @@ const styles = StyleSheet.create({
     },
     timeOptionBtn: {
         flex: 1,
-        backgroundColor: '#0D0D20',
+        backgroundColor: 'rgba(255,255,255,0.04)',
         borderRadius: 14,
         paddingVertical: 14,
         alignItems: 'center',
@@ -600,18 +631,18 @@ const styles = StyleSheet.create({
     },
     timeOptionBtnActive: {
         borderColor: C.primary,
-        backgroundColor: 'rgba(0,229,255,0.05)',
+        backgroundColor: 'rgba(56,189,248,0.06)',
     },
     timeOptionText: {
         color: C.sub,
-        fontSize: 14,
+        fontSize: 13,
         fontWeight: '600',
     },
     timeOptionTextActive: {
         color: C.primary,
     },
     timeOptionBtnDisabled: {
-        backgroundColor: '#050510',
+        backgroundColor: 'rgba(0,0,0,0.3)',
         borderColor: 'rgba(255,255,255,0.03)',
         opacity: 0.45,
     },
@@ -657,7 +688,7 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
     },
     modalContent: {
-        backgroundColor: '#101026',
+        backgroundColor: 'rgba(14, 16, 20, 0.98)',
         borderTopLeftRadius: 28,
         borderTopRightRadius: 28,
         padding: 24,
@@ -769,43 +800,10 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: '800',
     },
-    profileBar: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: '#12122A',
-        paddingHorizontal: 16,
-        paddingVertical: 12,
-        borderRadius: 16,
-        borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.06)',
-        marginTop: 8,
-        marginHorizontal: 16,
-    },
-    profileIcon: {
-        fontSize: 24,
-    },
-    profileName: {
-        color: '#F1F5F9',
-        fontSize: 14,
-        fontWeight: '700',
-    },
-    profilePhone: {
-        color: '#64748B',
-        fontSize: 12,
-        fontWeight: '500',
-    },
-    logoutBtn: {
-        backgroundColor: 'rgba(239,68,68,0.1)',
-        paddingHorizontal: 12,
-        paddingVertical: 8,
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: 'rgba(239,68,68,0.2)',
-    },
-    logoutText: {
-        color: '#EF4444',
-        fontSize: 12,
-        fontWeight: '700',
-    },
+    profileBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'rgba(18, 20, 23, 0.95)', paddingHorizontal: 16, paddingVertical: 12, borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.07)', marginTop: 8, marginHorizontal: 16 },
+    profileIconWrap: { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(56,189,248,0.10)', borderWidth: 1, borderColor: 'rgba(56,189,248,0.20)', justifyContent: 'center', alignItems: 'center' },
+    profileName: { color: '#F8FAFC', fontSize: 14, fontWeight: '700' },
+    profilePhone: { color: '#94A3B8', fontSize: 12, fontWeight: '500' },
+    logoutBtn: { backgroundColor: 'rgba(239,68,68,0.08)', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 10, borderWidth: 1, borderColor: 'rgba(239,68,68,0.2)', flexDirection: 'row', alignItems: 'center', gap: 6 },
+    logoutText: { color: '#EF4444', fontSize: 12, fontWeight: '700' },
 });

@@ -1,29 +1,29 @@
-// ─── AntiGravity Design System Tokens ───────────────────────────────────────
+// ─── اهلِ فن Design System Tokens ───────────────────────────────────────────
 export const T = {
-    // Base surfaces (dark mode)
-    bg:        '#0D0F14',
-    card:      '#161A24',
-    elevated:  '#1E2433',
-    border:    'rgba(255,255,255,0.06)',
-    borderLight: 'rgba(255,255,255,0.10)',
+    // Base surfaces (Premium Charcoal Grey & Glassmorphic shades)
+    bg:          '#0A0B0D',       // Deep obsidian charcoal
+    card:        '#121417',       // Charcoal card base
+    elevated:    '#1A1D22',       // Light charcoal surface
+    border:      'rgba(255, 255, 255, 0.08)',  // Glass border reflection
+    borderLight: 'rgba(255, 255, 255, 0.16)',  // Highlighted glass border
 
-    // Brand
-    brand1:    '#0F1C3F',
-    brand2:    '#1A6BFF',
-    accent1:   '#F5A623',
-    accent2:   '#F06449',
+    // Brand Colors
+    brand1:      '#121417',
+    brand2:      '#38BDF8',       // Refined Ice Blue
+    accent1:     '#D4AF37',       // Luxury Gold
+    accent2:     '#E2E8F0',       // Platinum Silver
 
     // Semantic
-    success:   '#22C55E',
-    warning:   '#F59E0B',
-    error:     '#EF4444',
-    info:      '#3B82F6',
+    success:     '#10B981',       // Emerald Green
+    warning:     '#F59E0B',       // Amber Yellow
+    error:       '#EF4444',       // Rose Red
+    info:        '#06B6D4',       // Cyan Info
 
     // Text
-    text:      '#1A1D23',       // on light surfaces
-    textLight: '#F1F5F9',       // on dark surfaces
-    sub:       '#64748B',
-    placeholder:'#94A3B8',
+    text:        '#0A0B0D',       // Dark text (for rare light backgrounds)
+    textLight:   '#F8FAFC',       // Clean off-white
+    sub:         '#94A3B8',       // Muted slate gray
+    placeholder: '#475569',       // Darker slate gray for inputs
 
     // Spacing (8pt grid)
     sp1: 4, sp2: 8, sp3: 12, sp4: 16, sp5: 20,
@@ -43,18 +43,19 @@ export const T = {
 };
 
 export const GRADIENTS = {
-    brand:    ['#1A6BFF', '#0F4FCC'],
-    brandHero:['#0F1C3F', '#1A6BFF'],
-    accent:   ['#F5A623', '#F06449'],
-    card:     ['#FFFFFF', '#F8F9FF'],
-    dark:     ['#0F1C3F', '#0D0F14'],
-    darkCard: ['#161A24', '#1E2433'],
-    glass:    ['rgba(255,255,255,0.08)', 'rgba(255,255,255,0.03)'],
+    brand:    ['#38BDF8', '#0284C7'],              // Refined Ice Blue gradient
+    brandHero:['#1A1D22', '#0A0B0D'],              // Charcoal black gradient
+    accent:   ['#F59E0B', '#D4AF37'],              // Luxury Gold/Amber gradient
+    card:     ['rgba(27, 29, 34, 0.9)', 'rgba(18, 20, 23, 0.95)'], // Glassmorphic card gradient
+    dark:     ['#121417', '#0A0B0D'],
+    darkCard: ['#1A1D22', '#121417'],
+    glass:    ['rgba(255, 255, 255, 0.08)', 'rgba(255, 255, 255, 0.02)'],
+    charcoal: ['#1E222B', '#121417'],
 };
 
 export const SHADOWS = {
-    card:     { shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 24, elevation: 4 },
-    focus:    { shadowColor: '#1A6BFF', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.15, shadowRadius: 32, elevation: 8 },
-    btn:      { shadowColor: '#1A6BFF', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.35, shadowRadius: 20, elevation: 6 },
-    accent:   { shadowColor: '#F06449', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.40, shadowRadius: 24, elevation: 8 },
+    card:     { shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 16, elevation: 4 },
+    focus:    { shadowColor: '#38BDF8', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.2, shadowRadius: 20, elevation: 6 },
+    btn:      { shadowColor: '#38BDF8', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 12, elevation: 4 },
+    accent:   { shadowColor: '#D4AF37', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.25, shadowRadius: 16, elevation: 6 },
 };

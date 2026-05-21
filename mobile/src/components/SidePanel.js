@@ -7,6 +7,9 @@ import { useSidePanel } from './SidePanelContext';
 import { useBookings } from '../BookingContext';
 import { T, GRADIENTS, SHADOWS } from '../theme';
 import { downloadBookingLogs } from '../utils/logExporter';
+import { 
+    Calendar, Bot, LogOut, Inbox, Download, X, Star, ChevronDown, ChevronUp 
+} from 'lucide-react-native';
 
 const PANEL_WIDTH = 280;
 const MOBILE_BREAKPOINT = 768;
@@ -65,6 +68,11 @@ export default function SidePanel() {
 
     const renderProfileSection = () => (
         <View style={styles.profileSection}>
+            {isMobile && (
+                <TouchableOpacity style={styles.closeBtn} onPress={closePanel} activeOpacity={0.7}>
+                    <X size={20} color={T.sub} />
+                </TouchableOpacity>
+            )}
             <View style={styles.avatarContainer}>
                 {/* Sleek silhouette placeholder logo */}
                 <View style={styles.avatarGlow} />
@@ -74,10 +82,11 @@ export default function SidePanel() {
                 </View>
             </View>
             <Text style={styles.userName}>{user?.name || 'Guest User'}</Text>
-            <Text style={styles.userPhone}>{user?.phone || 'AntiGravity Service'}</Text>
+            <Text style={styles.userPhone}>{user?.phone || 'اہلِ فن سروس'}</Text>
             {user && (
                 <TouchableOpacity style={styles.logoutBtn} onPress={logout}>
-                    <Text style={styles.logoutText}>🚪 Logout</Text>
+                    <LogOut size={13} color="#EF4444" style={{ marginRight: 6 }} />
+                    <Text style={styles.logoutText}>Logout</Text>
                 </TouchableOpacity>
             )}
             <View style={styles.divider} />
@@ -90,18 +99,24 @@ export default function SidePanel() {
                 style={[styles.tab, activeTab === 'workflows' && styles.tabActive]}
                 onPress={() => switchTab('workflows')}
             >
-                <Text style={[styles.tabText, activeTab === 'workflows' && styles.tabTextActive]}>
-                    🤖 Workflows
-                </Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                    <Bot size={16} color={activeTab === 'workflows' ? '#38BDF8' : T.sub} />
+                    <Text style={[styles.tabText, activeTab === 'workflows' && styles.tabTextActive]}>
+                        Workflows
+                    </Text>
+                </View>
                 {activeTab === 'workflows' && <View style={styles.tabIndicator} />}
             </TouchableOpacity>
             <TouchableOpacity
                 style={[styles.tab, activeTab === 'bookings' && styles.tabActive]}
                 onPress={() => switchTab('bookings')}
             >
-                <Text style={[styles.tabText, activeTab === 'bookings' && styles.tabTextActive]}>
-                    📅 Bookings
-                </Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                    <Calendar size={16} color={activeTab === 'bookings' ? '#38BDF8' : T.sub} />
+                    <Text style={[styles.tabText, activeTab === 'bookings' && styles.tabTextActive]}>
+                        Bookings
+                    </Text>
+                </View>
                 {activeTab === 'bookings' && <View style={styles.tabIndicator} />}
             </TouchableOpacity>
         </View>
@@ -134,9 +149,10 @@ export default function SidePanel() {
                         <View key={booking.id} style={[styles.bookingCard, styles.bookingCardCompleted]}>
                             <View style={styles.bookingHeader}>
                                 <Text style={styles.bookingService}>{booking.service}</Text>
-                                <Text style={styles.rating}>
-                                    {'⭐ ' + (booking.rating || 'N/A')}
-                                </Text>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                                    <Star size={11} color="#D4AF37" fill="#D4AF37" />
+                                    <Text style={styles.rating}>{booking.rating || 'N/A'}</Text>
+                                </View>
                             </View>
                             <Text style={styles.bookingProvider}>{booking.provider?.provider_name || booking.provider || 'Provider'}</Text>
                             <Text style={styles.bookingDate}>{booking.date}</Text>
@@ -147,7 +163,7 @@ export default function SidePanel() {
 
             {bookings.length === 0 && (
                 <View style={styles.emptyState}>
-                    <Text style={styles.emptyIcon}>📭</Text>
+                    <Inbox size={44} color={T.sub} style={{ marginBottom: 12 }} />
                     <Text style={styles.emptyText}>No bookings yet</Text>
                     <Text style={styles.emptySubtext}>Create your first booking!</Text>
                 </View>
@@ -175,7 +191,7 @@ export default function SidePanel() {
                                     <View style={styles.workflowHeader}>
                                         <Text style={styles.workflowService}>{booking.service}</Text>
                                         <Text style={[styles.workflowStatusText, {
-                                            color: booking.status === 'Completed' ? '#22C55E' : '#1A6BFF'
+                                            color: booking.status === 'Completed' ? '#10B981' : '#38BDF8'
                                         }]}>
                                             ● {booking.status}
                                         </Text>
@@ -183,9 +199,9 @@ export default function SidePanel() {
                                     <Text style={styles.workflowProvider}>{booking.provider?.provider_name || booking.provider || 'Provider'}</Text>
                                     <Text style={styles.workflowDate}>{booking.date}</Text>
                                 </View>
-                                <Text style={styles.expandChevron}>
-                                    {isExpanded ? '▲' : '▼'}
-                                </Text>
+                                {isExpanded
+                                    ? <ChevronUp size={16} color={T.sub} />
+                                    : <ChevronDown size={16} color={T.sub} />}
                             </TouchableOpacity>
 
                             {isExpanded && (
@@ -215,7 +231,10 @@ export default function SidePanel() {
                                             downloadBookingLogs(logsData);
                                         }}
                                     >
-                                        <Text style={styles.sideDownloadBtnText}>📥 Download Technical Logs</Text>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                                            <Download size={13} color="#38BDF8" />
+                                            <Text style={styles.sideDownloadBtnText}>Download Technical Logs</Text>
+                                        </View>
                                     </TouchableOpacity>
 
                                     {/* Vertical Timeline Stepper of Agents */}
@@ -254,7 +273,7 @@ export default function SidePanel() {
                 })
             ) : (
                 <View style={styles.emptyState}>
-                    <Text style={styles.emptyIcon}>⚡</Text>
+                    <Bot size={44} color={T.sub} style={{ marginBottom: 12 }} />
                     <Text style={styles.emptyText}>No workflows yet</Text>
                     <Text style={styles.emptySubtext}>Start a booking to see workflows</Text>
                 </View>
@@ -318,9 +337,9 @@ export default function SidePanel() {
 const styles = StyleSheet.create({
     panelContainer: {
         width: PANEL_WIDTH,
-        backgroundColor: T.card,
+        backgroundColor: 'rgba(18, 20, 23, 0.97)',
         borderRightWidth: 1,
-        borderRightColor: T.border,
+        borderRightColor: 'rgba(255, 255, 255, 0.08)',
         ...SHADOWS.card,
     },
     panelMobile: {
@@ -332,18 +351,31 @@ const styles = StyleSheet.create({
     },
     panelContent: {
         flex: 1,
-        backgroundColor: T.card,
+        backgroundColor: 'transparent',
     },
     backdrop: {
         ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0,0,0,0.5)',
+        backgroundColor: 'rgba(0,0,0,0.65)',
         zIndex: 998,
     },
 
+    closeBtn: {
+        alignSelf: 'flex-end',
+        width: 32,
+        height: 32,
+        borderRadius: 16,
+        backgroundColor: 'rgba(255,255,255,0.06)',
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.10)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 8,
+    },
     // Profile Section
     profileSection: {
         alignItems: 'center',
-        paddingVertical: T.sp5,
+        paddingTop: T.sp4,
+        paddingBottom: T.sp4,
         paddingHorizontal: T.sp4,
     },
     avatarContainer: {
@@ -357,17 +389,17 @@ const styles = StyleSheet.create({
         width: 72,
         height: 72,
         borderRadius: 36,
-        backgroundColor: 'rgba(0, 229, 255, 0.12)',
+        backgroundColor: 'rgba(56, 189, 248, 0.10)',
         borderWidth: 1,
-        borderColor: 'rgba(0, 229, 255, 0.25)',
+        borderColor: 'rgba(56, 189, 248, 0.20)',
     },
     avatarPlaceholder: {
         width: 60,
         height: 60,
         borderRadius: 30,
-        backgroundColor: '#0F172A',
+        backgroundColor: '#0A0B0D',
         borderWidth: 2,
-        borderColor: '#00E5FF',
+        borderColor: '#38BDF8',
         justifyContent: 'center',
         alignItems: 'center',
         overflow: 'hidden',
@@ -376,7 +408,7 @@ const styles = StyleSheet.create({
         width: 18,
         height: 18,
         borderRadius: 9,
-        backgroundColor: '#64748B',
+        backgroundColor: '#334155',
         marginTop: 6,
     },
     silhouetteBody: {
@@ -384,13 +416,13 @@ const styles = StyleSheet.create({
         height: 20,
         borderTopLeftRadius: 16,
         borderTopRightRadius: 16,
-        backgroundColor: '#64748B',
+        backgroundColor: '#334155',
         marginTop: 4,
     },
     avatarText: {
         fontSize: 24,
         fontWeight: '700',
-        color: '#1A6BFF',
+        color: '#38BDF8',
     },
     userName: {
         fontSize: 16,
@@ -404,12 +436,15 @@ const styles = StyleSheet.create({
         marginBottom: T.sp4,
     },
     logoutBtn: {
+        flexDirection: 'row',
+        alignItems: 'center',
         paddingVertical: T.sp2,
         paddingHorizontal: T.sp3,
-        backgroundColor: 'rgba(239,68,68,0.1)',
+        backgroundColor: 'rgba(239,68,68,0.08)',
         borderRadius: T.r2,
         borderWidth: 1,
-        borderColor: 'rgba(239,68,68,0.3)',
+        borderColor: 'rgba(239,68,68,0.2)',
+        gap: 6,
     },
     logoutText: {
         fontSize: 12,
@@ -438,7 +473,7 @@ const styles = StyleSheet.create({
     },
     tabActive: {
         borderBottomWidth: 2,
-        borderBottomColor: '#1A6BFF',
+        borderBottomColor: '#38BDF8',
     },
     tabText: {
         fontSize: 12,
@@ -446,7 +481,7 @@ const styles = StyleSheet.create({
         color: T.sub,
     },
     tabTextActive: {
-        color: '#1A6BFF',
+        color: '#38BDF8',
         fontWeight: '700',
     },
     tabIndicator: {
@@ -454,7 +489,7 @@ const styles = StyleSheet.create({
         bottom: -1,
         width: '80%',
         height: 2,
-        backgroundColor: '#1A6BFF',
+        backgroundColor: '#38BDF8',
     },
 
     // Tab Content
@@ -474,16 +509,16 @@ const styles = StyleSheet.create({
 
     // Booking Card
     bookingCard: {
-        backgroundColor: T.elevated,
+        backgroundColor: 'rgba(26, 29, 34, 0.8)',
         borderRadius: T.r3,
         padding: T.sp3,
         marginBottom: T.sp2,
         borderWidth: 1,
-        borderColor: T.border,
+        borderColor: 'rgba(255, 255, 255, 0.08)',
     },
     bookingCardCompleted: {
-        borderColor: 'rgba(34,197,94,0.2)',
-        backgroundColor: 'rgba(34,197,94,0.05)',
+        borderColor: 'rgba(16, 185, 129, 0.2)',
+        backgroundColor: 'rgba(16, 185, 129, 0.04)',
     },
     bookingHeader: {
         flexDirection: 'row',
@@ -511,21 +546,21 @@ const styles = StyleSheet.create({
     },
     rating: {
         fontSize: 11,
-        color: '#22C55E',
+        color: '#D4AF37',
         fontWeight: '600',
     },
 
     // Workflow Card
     workflowCard: {
-        backgroundColor: T.elevated,
+        backgroundColor: 'rgba(26, 29, 34, 0.8)',
         borderRadius: T.r3,
         padding: T.sp3,
         marginBottom: T.sp2,
         borderWidth: 1,
-        borderColor: T.border,
+        borderColor: 'rgba(255, 255, 255, 0.08)',
     },
     workflowCardExpanded: {
-        borderColor: 'rgba(26,107,255,0.3)',
+        borderColor: 'rgba(56, 189, 248, 0.25)',
     },
     workflowHeaderTouch: {
         flexDirection: 'row',
@@ -559,7 +594,7 @@ const styles = StyleSheet.create({
     expandChevron: {
         fontSize: 12,
         color: T.sub,
-        paddingHorizontal: 8,
+        paddingHorizontal: 4,
     },
     
     // Workflow Details Accordion
@@ -572,18 +607,18 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     sideDownloadBtn: {
-        backgroundColor: 'rgba(26,107,255,0.1)',
+        backgroundColor: 'rgba(56, 189, 248, 0.08)',
         borderRadius: T.r2,
         paddingVertical: 10,
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: 'rgba(26,107,255,0.25)',
+        borderColor: 'rgba(56, 189, 248, 0.20)',
         marginBottom: 16,
     },
     sideDownloadBtnText: {
         fontSize: 11,
         fontWeight: '700',
-        color: '#00E5FF',
+        color: '#38BDF8',
     },
     timelineTitle: {
         fontSize: 10,

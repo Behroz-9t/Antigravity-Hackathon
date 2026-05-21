@@ -12,8 +12,8 @@ import {
 import { parseTimeSlot } from './TrackingScreen';
 
 const C = {
-    bg: '#0A0A14', card: '#12122A', border: 'rgba(255,255,255,0.07)',
-    text: '#F1F5F9', sub: '#64748B', primary: '#00E5FF', purple: '#7C3AED',
+    bg: '#0A0B0D', card: 'rgba(18, 20, 23, 0.95)', border: 'rgba(255,255,255,0.08)',
+    text: '#F8FAFC', sub: '#94A3B8', primary: '#38BDF8', gold: '#D4AF37',
 };
 
 export default function BookingScreen({ route, navigation }) {
@@ -51,7 +51,7 @@ export default function BookingScreen({ route, navigation }) {
 
         // 1. Booking confirmation push notification (immediate, always)
         await sendImmediateNotification(
-            '✅ Booking Confirmed — AntiGravity',
+            '✅ Booking Confirmed — ???? ??',
             `${providerName} is assigned for your ${service} — ${timeSlot}.`
         );
 
@@ -60,7 +60,7 @@ export default function BookingScreen({ route, navigation }) {
             const slotDate = parseTimeSlot(timeSlot);
             if (slotDate) {
                 await scheduleReminderNotification(
-                    '⏰ Upcoming Booking — AntiGravity',
+                    '⏰ Upcoming Booking — ???? ??',
                     `Reminder: ${providerName} is arriving in 2 hours for your ${service} at ${timeSlot}.`,
                     slotDate
                 );
@@ -94,14 +94,14 @@ export default function BookingScreen({ route, navigation }) {
 
                 <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
                     {/* Provider banner */}
-                    <LinearGradient colors={['#1A0A3A','#0A1A3A']} style={styles.providerBanner} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
+                    <LinearGradient colors={['#1A1D22', '#0E1014']} style={styles.providerBanner} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
                         <View style={styles.avatarCircle}>
                             <Text style={styles.avatarText}>{provider.provider_name[0]}</Text>
                         </View>
                         <Text style={styles.bannerName}>{provider.provider_name}</Text>
                         <Text style={styles.bannerService}>{intent?.service}</Text>
                         <View style={styles.bannerMeta}>
-                            <View style={styles.metaChip}><Text style={styles.metaChipText}>⭐ {provider.rating}</Text></View>
+                            <View style={styles.metaChip}><Text style={styles.metaChipText}>★ {provider.rating}</Text></View>
                             <View style={styles.metaChip}><Text style={styles.metaChipText}>📍 {provider.location}</Text></View>
                             <View style={styles.metaChip}><Text style={styles.metaChipText}>⏱ {provider.estimated_arrival}</Text></View>
                         </View>
@@ -180,8 +180,8 @@ export default function BookingScreen({ route, navigation }) {
                         onPress={handleConfirm}
                         disabled={confirmed}
                     >
-                        <LinearGradient colors={['#00E5FF','#7C3AED']} style={styles.confirmGrad} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}>
-                            <Text style={styles.confirmText}>{confirmed ? 'Confirmed! Tracking…' : 'Confirm & Track Live  🚀'}</Text>
+                        <LinearGradient colors={['#38BDF8','#0284C7']} style={styles.confirmGrad} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}>
+                            <Text style={styles.confirmText}>{confirmed ? 'Confirmed! Tracking…' : 'Confirm & Track Live  →'}</Text>
                         </LinearGradient>
                     </TouchableOpacity>
 
@@ -200,7 +200,7 @@ export default function BookingScreen({ route, navigation }) {
 
                                 // Confirmation notification
                                 await sendImmediateNotification(
-                                    '✅ Booking Confirmed — AntiGravity',
+                                    '✅ Booking Confirmed — ???? ??',
                                     `${providerName} is assigned for your ${service} — ${timeSlot}.`
                                 );
 
@@ -208,7 +208,7 @@ export default function BookingScreen({ route, navigation }) {
                                 const slotDate = parseTimeSlot(timeSlot);
                                 if (slotDate) {
                                     await scheduleReminderNotification(
-                                        '⏰ Upcoming Booking — AntiGravity',
+                                        '⏰ Upcoming Booking — ???? ??',
                                         `Reminder: ${providerName} is arriving in 2 hours for your ${service} at ${timeSlot}.`,
                                         slotDate
                                     );
@@ -248,8 +248,8 @@ const styles = StyleSheet.create({
     scroll: { padding: 16 },
 
     providerBanner: { borderRadius: 24, padding: 28, alignItems: 'center', marginBottom: 16, borderWidth: 1, borderColor: 'rgba(124,58,237,0.3)' },
-    avatarCircle: { width: 72, height: 72, borderRadius: 36, backgroundColor: 'rgba(0,229,255,0.15)', borderWidth: 2, borderColor: C.primary, justifyContent: 'center', alignItems: 'center', marginBottom: 12 },
-    avatarText: { color: C.primary, fontSize: 30, fontWeight: '800' },
+    avatarCircle: { width: 72, height: 72, borderRadius: 36, backgroundColor: 'rgba(56,189,248,0.12)', borderWidth: 2, borderColor: '#38BDF8', justifyContent: 'center', alignItems: 'center', marginBottom: 12 },
+    avatarText: { color: '#38BDF8', fontSize: 30, fontWeight: '800' },
     bannerName: { color: C.text, fontSize: 20, fontWeight: '800', marginBottom: 4 },
     bannerService: { color: C.sub, fontSize: 13, marginBottom: 16 },
     bannerMeta: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, justifyContent: 'center' },
@@ -262,9 +262,9 @@ const styles = StyleSheet.create({
     detailLabel: { color: C.sub, fontSize: 14 },
     detailValue: { color: C.text, fontSize: 14, fontWeight: '600', flex: 1, textAlign: 'right' },
 
-    priceCard: { backgroundColor: 'rgba(0,229,255,0.06)', borderRadius: 20, padding: 20, marginBottom: 20, borderWidth: 1, borderColor: 'rgba(0,229,255,0.2)', alignItems: 'center' },
+    priceCard: { backgroundColor: 'rgba(56,189,248,0.06)', borderRadius: 20, padding: 20, marginBottom: 20, borderWidth: 1, borderColor: 'rgba(56,189,248,0.20)', alignItems: 'center' },
     priceLabel: { color: C.sub, fontSize: 13, marginBottom: 6 },
-    priceValue: { color: C.primary, fontSize: 24, fontWeight: '800' },
+    priceValue: { color: '#38BDF8', fontSize: 24, fontWeight: '800' },
     priceSub: { color: C.sub, fontSize: 11, marginTop: 4 },
 
     confirmBtn: { borderRadius: 20, overflow: 'hidden', marginBottom: 12 },

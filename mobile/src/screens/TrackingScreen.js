@@ -268,7 +268,7 @@ export default function TrackingScreen({ route, navigation }) {
 
         // Cross-platform push notification (expo-notifications on native, Web API on browser)
         sendImmediateNotification(
-            '🚀 Booking Started — AntiGravity',
+            '🚀 Booking Started — ???? ??',
             `${providerData?.provider_name ?? 'Your provider'} is on the way for ${bookingMeta.timeSlot ?? 'your scheduled slot'}!`
         );
     };

@@ -6,24 +6,28 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { useBookings } from '../BookingContext';
 import { T, GRADIENTS, SHADOWS } from '../theme';
+import { Wrench, Bot, MapPin } from 'lucide-react-native';
 
 const { width } = Dimensions.get('window');
 
 const SLIDES = [
     {
-        emoji: '🛸',
-        title: 'Welcome to AntiGravity',
+        Icon: Wrench,
+        iconColor: '#38BDF8',
+        title: 'خوش آمدید — اہلِ فن',
         subtitle: 'The smart, agentic home services marketplace designed to make your life effortless.',
         agenda: '⚡ On-demand local pros at your doorstep\n🛡️ Safe, vetted, and top-rated providers\n🇵🇰 Designed for Pakistan, multilingual support'
     },
     {
-        emoji: '🤖',
+        Icon: Bot,
+        iconColor: '#D4AF37',
         title: 'AI Agent Orchestrator',
         subtitle: 'No complex menus. Simply describe your problem in English, Roman Urdu, or Urdu.',
         agenda: '🔍 Natural language service interpretation\n📊 Automatic provider ranking and distance score\n🤝 Transparent service agreements and fixed estimates'
     },
     {
-        emoji: '⏰',
+        Icon: MapPin,
+        iconColor: '#10B981',
         title: 'Seamless Service Tracking',
         subtitle: 'Never guess provider arrival times. Real-time updates right on your screen.',
         agenda: '📍 Precise GPS map tracking & routing\n🔔 Auto notifications & 2-hr reminder alarms\n📭 Completely automated transaction receipts'
@@ -112,6 +116,7 @@ export default function OnboardingScreen() {
     }, [index]);
 
     const slide = SLIDES[index];
+    const IconComponent = slide.Icon;
 
     return (
         <Animated.View style={{ flex: 1, opacity: exitAnim }}>
@@ -149,7 +154,13 @@ export default function OnboardingScreen() {
                         },
                     ]}
                 >
-                    <Text style={styles.emoji}>{slide.emoji}</Text>
+                    <LinearGradient
+                        colors={['rgba(56,189,248,0.12)', 'rgba(212,175,55,0.06)']}
+                        style={styles.iconGradient}
+                    >
+                        <IconComponent size={48} color={slide.iconColor} strokeWidth={1.5} />
+                    </LinearGradient>
+                    <View style={[styles.iconGlow, { shadowColor: slide.iconColor }]} />
                 </Animated.View>
 
                 <Animated.Text
@@ -215,17 +226,11 @@ export default function OnboardingScreen() {
                 {/* Pagination Dots */}
                 <View style={styles.dotsContainer}>
                     {SLIDES.map((_, i) => (
-                        <Animated.View
+                        <View
                             key={i}
                             style={[
                                 styles.dot,
                                 i === index && styles.activeDot,
-                                i === index && {
-                                    width: Animated.divide(slideAnim, 10).interpolate({
-                                        inputRange: [-3, 0, 3],
-                                        outputRange: [20, 20, 20],
-                                    }),
-                                },
                             ]}
                         />
                     ))}
@@ -234,13 +239,13 @@ export default function OnboardingScreen() {
                 {/* Primary CTA */}
                 <TouchableOpacity style={styles.nextBtn} onPress={handleNext}>
                     <LinearGradient
-                        colors={['#00E5FF', '#7C3AED']}
+                        colors={['#38BDF8', '#0284C7']}
                         style={styles.nextGrad}
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 0 }}
                     >
                         <Text style={styles.nextText}>
-                            {index === SLIDES.length - 1 ? 'Get Started 🚀' : 'Continue'}
+                            {index === SLIDES.length - 1 ? 'شروع کریں  →' : 'Continue'}
                         </Text>
                     </LinearGradient>
                 </TouchableOpacity>
@@ -253,7 +258,7 @@ export default function OnboardingScreen() {
 const styles = StyleSheet.create({
     safe: {
         flex: 1,
-        backgroundColor: '#0D0F14',
+        backgroundColor: '#0A0B0D',
     },
     header: {
         flexDirection: 'row',
@@ -273,25 +278,39 @@ const styles = StyleSheet.create({
         paddingHorizontal: 32,
     },
     iconContainer: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        backgroundColor: 'rgba(0, 229, 255, 0.1)',
+        width: 110,
+        height: 110,
+        borderRadius: 32,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 32,
-        borderWidth: 1,
-        borderColor: 'rgba(0, 229, 255, 0.2)',
+        marginBottom: 36,
+        position: 'relative',
     },
-    emoji: {
-        fontSize: 48,
+    iconGradient: {
+        width: 110,
+        height: 110,
+        borderRadius: 32,
+        borderWidth: 1,
+        borderColor: 'rgba(56, 189, 248, 0.20)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    iconGlow: {
+        position: 'absolute',
+        width: 120,
+        height: 120,
+        borderRadius: 36,
+        shadowOpacity: 0.15,
+        shadowRadius: 24,
+        shadowOffset: { width: 0, height: 0 },
+        zIndex: -1,
     },
     title: {
-        color: '#F1F5F9',
+        color: '#F8FAFC',
         fontSize: 26,
         fontWeight: '800',
         textAlign: 'center',
-        letterSpacing: -0.5,
+        letterSpacing: 0.5,
         marginBottom: 12,
     },
     subtitle: {
@@ -302,23 +321,23 @@ const styles = StyleSheet.create({
         marginBottom: 32,
     },
     agendaCard: {
-        backgroundColor: '#161A24',
+        backgroundColor: 'rgba(18, 20, 23, 0.95)',
         borderRadius: 20,
         padding: 20,
         width: '100%',
         borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.06)',
+        borderColor: 'rgba(255,255,255,0.07)',
         ...SHADOWS.card,
     },
     agendaTitle: {
-        color: '#00E5FF',
+        color: '#38BDF8',
         fontSize: 11,
         fontWeight: '700',
-        letterSpacing: 1.5,
+        letterSpacing: 2,
         marginBottom: 12,
     },
     agendaText: {
-        color: '#F1F5F9',
+        color: '#F8FAFC',
         fontSize: 14,
         lineHeight: 24,
         fontWeight: '500',
@@ -337,11 +356,12 @@ const styles = StyleSheet.create({
         width: 8,
         height: 8,
         borderRadius: 4,
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        backgroundColor: 'rgba(255, 255, 255, 0.15)',
     },
     activeDot: {
-        width: 20,
-        backgroundColor: '#00E5FF',
+        width: 24,
+        backgroundColor: '#38BDF8',
+        borderRadius: 4,
     },
     nextBtn: {
         width: '100%',

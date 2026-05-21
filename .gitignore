@@ -95,6 +95,7 @@ yarn.lock
 # ──────────────────────────────────────────────
 .expo/
 dist/
+mobile/dist/
 web-build/
 expo-env.d.ts
 
