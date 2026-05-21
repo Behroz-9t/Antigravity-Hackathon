@@ -18,7 +18,7 @@ const getBackendUrl = () => {
     }
 
     // Production: Use deployed backend URL
-    return 'https://YOUR-RENDER-URL.onrender.com/api/v1';
+    return 'https://hackathonapp-necp.onrender.com/api/v1';
 };
 
 const API_BASE_URL = getBackendUrl();
