@@ -1,0 +1,139 @@
+# ============================================================
+#  اہلِ فن — Monorepo .gitignore
+#  Covers: Expo/React Native (mobile/) + Python FastAPI (backend/)
+# ============================================================
+
+# ──────────────────────────────────────────────
+# OS & Editor
+# ──────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+desktop.ini
+
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ──────────────────────────────────────────────
+# Environment & Secrets  ← NEVER commit these
+# ──────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.json
+google-services.json
+GoogleService-Info.plist
+
+# ──────────────────────────────────────────────
+# Python / FastAPI (backend/)
+# ──────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+ENV/
+
+# Pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+*.whl
+MANIFEST
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+
+# MyPy / type checkers
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# ──────────────────────────────────────────────
+# Node / JavaScript (mobile/)
+# ──────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+.pnp
+.pnp.js
+
+# ──────────────────────────────────────────────
+# Expo / React Native
+# ──────────────────────────────────────────────
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Android build artifacts
+android/
+*.apk
+*.aab
+*.keystore
+!debug.keystore
+
+# iOS build artifacts
+ios/
+*.ipa
+*.xcarchive
+DerivedData/
+*.xcuserdata
+Pods/
+
+# EAS / Expo build cache
+.eas/
+eas-cli/
+
+# Metro Bundler cache
+.metro-cache/
+metro-cache/
+
+# ──────────────────────────────────────────────
+# Logs
+# ──────────────────────────────────────────────
+logs/
+*.log
+*.log.*
+
+# ──────────────────────────────────────────────
+# Misc
+# ──────────────────────────────────────────────
+*.bak
+*.tmp
+*.orig
+.cache/
+tmp/
+temp/
