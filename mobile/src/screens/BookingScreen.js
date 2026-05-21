@@ -68,7 +68,7 @@ export default function BookingScreen({ route, navigation }) {
         }
 
         Animated.timing(fadeAnim, { toValue: 0, duration: 400, useNativeDriver: true }).start(() => {
-            navigation.replace('Tracking', {
+            navigation.replace('ProviderChat', {
                 bookingId: entry.id,
                 bookingData: booking,
                 intentData: intent,
@@ -181,7 +181,7 @@ export default function BookingScreen({ route, navigation }) {
                         disabled={confirmed}
                     >
                         <LinearGradient colors={['#38BDF8','#0284C7']} style={styles.confirmGrad} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}>
-                            <Text style={styles.confirmText}>{confirmed ? 'Confirmed! Tracking…' : 'Confirm & Track Live  →'}</Text>
+                            <Text style={styles.confirmText}>{confirmed ? 'Connecting to Provider…' : 'Confirm & Chat with Provider  →'}</Text>
                         </LinearGradient>
                     </TouchableOpacity>
 

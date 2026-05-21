@@ -9,14 +9,15 @@ import { BookingProvider, useBookings } from './src/BookingContext';
 import { SidePanelProvider } from './src/components/SidePanelContext';
 import AuthenticatedLayout from './src/components/AuthenticatedLayout';
 
-import HomeScreen       from './src/screens/HomeScreen';
-import ResultsScreen    from './src/screens/ResultsScreen';
-import BookingScreen    from './src/screens/BookingScreen';
-import ReasoningScreen  from './src/screens/ReasoningScreen';
-import HistoryScreen    from './src/screens/HistoryScreen';
-import TrackingScreen   from './src/screens/TrackingScreen';
-import AuthScreen       from './src/screens/AuthScreen';
-import OnboardingScreen from './src/screens/OnboardingScreen';
+import HomeScreen        from './src/screens/HomeScreen';
+import ResultsScreen     from './src/screens/ResultsScreen';
+import BookingScreen     from './src/screens/BookingScreen';
+import ReasoningScreen   from './src/screens/ReasoningScreen';
+import HistoryScreen     from './src/screens/HistoryScreen';
+import TrackingScreen    from './src/screens/TrackingScreen';
+import AuthScreen        from './src/screens/AuthScreen';
+import OnboardingScreen  from './src/screens/OnboardingScreen';
+import ProviderChatScreen from './src/screens/ProviderChatScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,12 +26,13 @@ function AuthenticatedNavigator() {
         <SidePanelProvider>
             <AuthenticatedLayout>
                 <Stack.Navigator screenOptions={{ headerShown: false }}>
-                    <Stack.Screen name="Home"      component={HomeScreen} />
-                    <Stack.Screen name="Reasoning" component={ReasoningScreen} />
-                    <Stack.Screen name="Results"   component={ResultsScreen} />
-                    <Stack.Screen name="Booking"   component={BookingScreen} />
-                    <Stack.Screen name="Tracking"  component={TrackingScreen} />
-                    <Stack.Screen name="History"   component={HistoryScreen} />
+                    <Stack.Screen name="Home"         component={HomeScreen} />
+                    <Stack.Screen name="Reasoning"    component={ReasoningScreen} />
+                    <Stack.Screen name="Results"      component={ResultsScreen} />
+                    <Stack.Screen name="Booking"      component={BookingScreen} />
+                    <Stack.Screen name="ProviderChat" component={ProviderChatScreen} />
+                    <Stack.Screen name="Tracking"     component={TrackingScreen} />
+                    <Stack.Screen name="History"      component={HistoryScreen} />
                 </Stack.Navigator>
             </AuthenticatedLayout>
         </SidePanelProvider>
