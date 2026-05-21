@@ -6,9 +6,7 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web",
-    "postinstall": "node postinstall.js",
-    "eas-build-post-install": "node patch-gradle-after-prebuild.js"
+    "web": "expo start --web"
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",
