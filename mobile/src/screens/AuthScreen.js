@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import {
-    View, Text, StyleSheet, SafeAreaView, TextInput,
+    View, Text, StyleSheet, TextInput,
     TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useBookings } from '../BookingContext';
 import { T, GRADIENTS, SHADOWS } from '../theme';
@@ -59,8 +60,10 @@ export default function AuthScreen() {
         }
     };
 
+    const insets = useSafeAreaInsets();
+
     return (
-        <SafeAreaView style={styles.safe}>
+        <View style={[styles.safe, { paddingTop: insets.top }]}>
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={{ flex: 1 }}
@@ -171,7 +174,7 @@ export default function AuthScreen() {
                     <Text style={styles.footerText}>Pakistan's first AI-powered home services platform</Text>
                 </ScrollView>
             </KeyboardAvoidingView>
-        </SafeAreaView>
+        </View>
     );
 }
 

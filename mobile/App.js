@@ -1,19 +1,21 @@
 import React from 'react';
+import { View, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ErrorBoundary from './src/ErrorBoundary';
 import { BookingProvider, useBookings } from './src/BookingContext';
 import { SidePanelProvider } from './src/components/SidePanelContext';
 import AuthenticatedLayout from './src/components/AuthenticatedLayout';
 
-import HomeScreen      from './src/screens/HomeScreen';
-import ResultsScreen   from './src/screens/ResultsScreen';
-import BookingScreen   from './src/screens/BookingScreen';
-import ReasoningScreen from './src/screens/ReasoningScreen';
-import HistoryScreen   from './src/screens/HistoryScreen';
-import TrackingScreen  from './src/screens/TrackingScreen';
-import AuthScreen      from './src/screens/AuthScreen';
+import HomeScreen       from './src/screens/HomeScreen';
+import ResultsScreen    from './src/screens/ResultsScreen';
+import BookingScreen    from './src/screens/BookingScreen';
+import ReasoningScreen  from './src/screens/ReasoningScreen';
+import HistoryScreen    from './src/screens/HistoryScreen';
+import TrackingScreen   from './src/screens/TrackingScreen';
+import AuthScreen       from './src/screens/AuthScreen';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 
 const Stack = createNativeStackNavigator();
@@ -36,13 +38,22 @@ function AuthenticatedNavigator() {
 }
 
 function AppNavigator() {
-    const { user, hasSeenOnboarding } = useBookings();
+    const { user, hasSeenOnboarding, isLoading } = useBookings();
+
+    // Show a dark splash while AsyncStorage is restoring the session
+    if (isLoading) {
+        return (
+            <View style={{ flex: 1, backgroundColor: '#0A0B0D', justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator color="#38BDF8" size="large" />
+            </View>
+        );
+    }
 
     return (
         <NavigationContainer>
             <StatusBar style="light" />
             <Stack.Navigator
-                screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#0A0A14' } }}
+                screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#0A0B0D' } }}
             >
                 {!hasSeenOnboarding ? (
                     <Stack.Screen name="Onboarding" component={OnboardingScreen} />
@@ -62,10 +73,12 @@ function AppNavigator() {
 
 export default function App() {
     return (
-        <ErrorBoundary>
-            <BookingProvider>
-                <AppNavigator />
-            </BookingProvider>
-        </ErrorBoundary>
+        <SafeAreaProvider>
+            <ErrorBoundary>
+                <BookingProvider>
+                    <AppNavigator />
+                </BookingProvider>
+            </ErrorBoundary>
+        </SafeAreaProvider>
     );
 }

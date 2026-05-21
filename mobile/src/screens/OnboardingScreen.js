@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-    View, Text, StyleSheet, SafeAreaView, TouchableOpacity,
-    Animated, Dimensions, Platform
+    View, Text, StyleSheet, TouchableOpacity,
+    Animated, Dimensions
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useBookings } from '../BookingContext';
 import { T, GRADIENTS, SHADOWS } from '../theme';
@@ -36,6 +37,7 @@ const SLIDES = [
 
 export default function OnboardingScreen() {
     const { completeOnboarding } = useBookings();
+    const insets = useSafeAreaInsets();
     const [index, setIndex] = useState(0);
 
     const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -119,10 +121,13 @@ export default function OnboardingScreen() {
     const IconComponent = slide.Icon;
 
     return (
-        <Animated.View style={{ flex: 1, opacity: exitAnim }}>
-            <SafeAreaView style={styles.safe}>
-            <View style={styles.header}>
-                <TouchableOpacity onPress={handleSkip}>
+        <Animated.View style={{ flex: 1, opacity: exitAnim, backgroundColor: '#0A0B0D' }}>
+            {/* Header with safe area aware Skip button */}
+            <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+                <TouchableOpacity
+                    onPress={handleSkip}
+                    hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                >
                     <Text style={styles.skipText}>Skip</Text>
                 </TouchableOpacity>
             </View>
@@ -250,7 +255,6 @@ export default function OnboardingScreen() {
                     </LinearGradient>
                 </TouchableOpacity>
             </View>
-            </SafeAreaView>
         </Animated.View>
     );
 }
@@ -264,7 +268,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-end',
         paddingHorizontal: 24,
-        paddingTop: 16,
+        paddingBottom: 8,
     },
     skipText: {
         color: '#64748B',

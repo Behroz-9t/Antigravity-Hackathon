@@ -18,39 +18,15 @@ export default function SidePanel() {
     const { isOpen, activeTab, closePanel, switchTab } = useSidePanel();
     const { user, bookings, logout } = useBookings();
     const { width: screenWidth } = useWindowDimensions();
-    const panelAnim = useRef(new Animated.Value(0)).current;
-    const backdropAnim = useRef(new Animated.Value(0)).current;
-
-    const isMobile = screenWidth < MOBILE_BREAKPOINT;
+    // Use a 0→1 progress value — safer with useNativeDriver
+    const progress = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
-        if (isOpen) {
-            Animated.parallel([
-                Animated.timing(panelAnim, {
-                    toValue: PANEL_WIDTH,
-                    duration: 300,
-                    useNativeDriver: true,
-                }),
-                Animated.timing(backdropAnim, {
-                    toValue: 1,
-                    duration: 300,
-                    useNativeDriver: true,
-                }),
-            ]).start();
-        } else {
-            Animated.parallel([
-                Animated.timing(panelAnim, {
-                    toValue: 0,
-                    duration: 300,
-                    useNativeDriver: true,
-                }),
-                Animated.timing(backdropAnim, {
-                    toValue: 0,
-                    duration: 300,
-                    useNativeDriver: true,
-                }),
-            ]).start();
-        }
+        Animated.timing(progress, {
+            toValue: isOpen ? 1 : 0,
+            duration: 280,
+            useNativeDriver: true,
+        }).start();
     }, [isOpen]);
 
     const [expandedBookingId, setExpandedBookingId] = useState(null);
@@ -282,35 +258,44 @@ export default function SidePanel() {
         </ScrollView>
     );
 
+    const isMobile = screenWidth < MOBILE_BREAKPOINT;
+
+    const translateX = progress.interpolate({
+        inputRange: [0, 1],
+        outputRange: [-PANEL_WIDTH, 0],
+    });
+    const backdropOpacity = progress.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0, 1],
+    });
+
     // Don't render side panel on mobile unless explicitly toggled
     if (isMobile) {
         return (
             <>
-                {isOpen && (
-                    <Animated.View
-                        style={[
-                            styles.backdrop,
-                            { opacity: backdropAnim },
-                        ]}
-                    >
-                        <TouchableOpacity
-                            style={{ flex: 1 }}
-                            onPress={closePanel}
-                            activeOpacity={1}
-                        />
-                    </Animated.View>
-                )}
+                {/* Backdrop — always rendered, just invisible when closed */}
+                <Animated.View
+                    pointerEvents={isOpen ? 'auto' : 'none'}
+                    style={[
+                        styles.backdrop,
+                        { opacity: backdropOpacity },
+                    ]}
+                >
+                    <TouchableOpacity
+                        style={{ flex: 1 }}
+                        onPress={closePanel}
+                        activeOpacity={1}
+                    />
+                </Animated.View>
+
+                {/* Sliding Panel */}
                 <Animated.View
                     style={[
                         styles.panelContainer,
                         styles.panelMobile,
-                        {
-                            transform: [{ translateX: panelAnim.interpolate({
-                                inputRange: [0, PANEL_WIDTH],
-                                outputRange: [-PANEL_WIDTH, 0],
-                            }) }],
-                        },
+                        { transform: [{ translateX }] },
                     ]}
+                    pointerEvents={isOpen ? 'auto' : 'none'}
                 >
                     <SafeAreaView style={styles.panelContent}>
                         {renderProfileSection()}
@@ -347,7 +332,8 @@ const styles = StyleSheet.create({
         left: 0,
         top: 0,
         bottom: 0,
-        zIndex: 999,
+        zIndex: 1000,
+        elevation: 20,
     },
     panelContent: {
         flex: 1,
@@ -355,8 +341,9 @@ const styles = StyleSheet.create({
     },
     backdrop: {
         ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0,0,0,0.65)',
-        zIndex: 998,
+        backgroundColor: 'rgba(0,0,0,0.7)',
+        zIndex: 999,
+        elevation: 19,
     },
 
     closeBtn: {
